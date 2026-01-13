@@ -26,25 +26,21 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 修复居中问题并保持美观 */
         .input-zen-custom {
             display: block;
             width: 100%;
             height: 65px !important;
             background-color: #fde68a !important;
             border: 2px solid #b45309 !important;
-            border-radius: 20px !important; /* 增加圆角，更圆润 */
+            border-radius: 20px !important;
             color: #000000 !important;
             font-size: 1.2rem !important;
             font-weight: 900 !important;
-            
-            /* 居中核心方案 */
             text-align: center !important;
-            text-align-last: center !important; /* 针对 select 标签的强制居中 */
+            text-align-last: center !important;
             padding: 0 !important;
-            
             outline: none;
-            appearance: none; /* 去掉原生下拉箭头 */
+            appearance: none;
             -webkit-appearance: none;
             margin-top: 8px;
         }
@@ -67,6 +63,12 @@
             border: 1px solid rgba(181, 142, 99, 0.2);
             margin-top: 20px;
         }
+
+        /* 推算过程文字颜色调整为琥珀金 */
+        .step-val {
+            color: #f3d4b0 !important;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -75,13 +77,14 @@
         <header class="text-center mb-6">
             <h1 class="text-3xl font-black gold-text tracking-widest mb-2">小六爻掐指神通术</h1>
             <div id="lunarInfo" class="text-[11px] text-zinc-500 tracking-[0.2em] font-light italic"></div>
+            <div id="currentTime" class="text-lg font-bold text-amber-600/80 mt-1 tracking-[0.3em]"></div>
         </header>
 
         <section class="bg-zinc-950/90 rounded-[2.5rem] p-6 border border-zinc-900 shadow-2xl">
             <div class="grid grid-cols-4 gap-2 mb-8">
                 <div class="text-center">
                     <label class="text-[12px] text-amber-500 font-bold block">年</label>
-                    <input type="number" id="year" class="input-zen-custom" value="2025">
+                    <input type="number" id="year" class="input-zen-custom">
                 </div>
                 <div class="text-center">
                     <label class="text-[12px] text-amber-500 font-bold block">月</label>
@@ -132,10 +135,22 @@
             "空亡": { badge: "谨慎 · 虚无", text: "空亡事不祥，阴人多乖张。求财无利益，行人有灾殃。" }
         };
 
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + " : " + 
+                            now.getMinutes().toString().padStart(2, '0') + " : " + 
+                            now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('currentTime').innerText = timeStr;
+        }
+
         function init() {
             const date = new Date();
             const lunar = Lunar.fromDate(date);
             document.getElementById('lunarInfo').innerText = `— ${lunar.getYearInGanZhi()}年 ${lunar.getMonthInChinese()}月${lunar.getDayInChinese()} —`;
+            
+            // 启动时钟
+            setInterval(updateClock, 1000);
+            updateClock();
 
             const mSelect = document.getElementById('month');
             const dSelect = document.getElementById('day');
@@ -145,7 +160,6 @@
             for(let i=1; i<=30; i++) dSelect.options.add(new Option(chineseNums[i], i));
             shichen.forEach((s, i) => hSelect.options.add(new Option(s, i + 1)));
 
-            // 设置默认年份为 2025
             document.getElementById('year').value = 2025;
             mSelect.value = lunar.getMonth();
             dSelect.value = lunar.getDay();
@@ -177,8 +191,8 @@
 
             document.getElementById('processSteps').innerHTML = steps.map(s => `
                 <div class="flex flex-col items-center">
-                    <span class="opacity-40 uppercase font-bold">${s.label}</span>
-                    <span class="text-amber-200 font-bold">${s.to}</span>
+                    <span class="opacity-40 uppercase font-bold text-[10px]">${s.label}</span>
+                    <span class="step-val text-sm">${s.to}</span>
                 </div>
             `).join('<div class="text-zinc-800 self-center">|</div>');
         }
