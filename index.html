@@ -13,7 +13,11 @@
             background-color: #000000;
             color: #d4d4d8;
             font-family: 'Noto Serif SC', serif;
-            -webkit-tap-highlight-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
         }
 
         .gold-text {
@@ -22,80 +26,86 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 核心改进：加深颜色对比，放大框体高度 */
-        .input-zen {
-            @apply w-full bg-amber-200 border-2 border-amber-500/50 rounded-2xl py-5 text-xl text-center focus:outline-none focus:border-amber-400 transition-all text-black font-black shadow-lg;
+        /* 强制覆盖：放大框体、变黑字、变背景 */
+        .input-zen-custom {
+            display: block;
+            width: 100%;
+            height: 65px !important; /* 强制高度 */
+            background-color: #fde68a !important; /* 明亮的亮金色背景 */
+            border: 2px solid #b45309 !important;
+            border-radius: 16px !important;
+            color: #000000 !important; /* 强制黑字 */
+            font-size: 1.25rem !important; /* 字体加大 */
+            font-weight: 900 !important;
+            text-align: center !important;
+            outline: none;
             appearance: none;
+            margin-top: 8px;
         }
 
         .btn-divine {
             background: linear-gradient(135deg, #27272a 0%, #09090b 100%);
             border: 1px solid rgba(181, 142, 99, 0.5);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s;
         }
 
         .btn-divine:active {
-            background: #b58e63;
+            background: #fde68a;
             color: #000;
-            transform: scale(0.97);
+            transform: scale(0.95);
         }
 
         .result-container {
             background: #050505;
             border: 1px solid rgba(181, 142, 99, 0.2);
-        }
-
-        .divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(181, 142, 99, 0.4), transparent);
+            margin-top: 20px;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-6">
+<body>
 
-    <div class="w-full max-w-md mt-6"> 
-        <header class="text-center mb-10">
+    <div class="w-full max-w-md px-6"> 
+        <header class="text-center mb-6">
             <h1 class="text-3xl font-black gold-text tracking-widest mb-2">小六爻掐指神通术</h1>
             <div id="lunarInfo" class="text-[11px] text-zinc-500 tracking-[0.2em] font-light italic"></div>
         </header>
 
-        <section class="bg-zinc-950/90 rounded-[2.5rem] p-6 border border-zinc-900 mb-10 shadow-2xl">
-            <div class="grid grid-cols-4 gap-3 mb-10">
-                <div>
-                    <label class="text-[12px] text-amber-500 block mb-4 text-center font-bold tracking-tighter">年</label>
-                    <input type="number" id="year" class="input-zen">
+        <section class="bg-zinc-950/90 rounded-[2.5rem] p-6 border border-zinc-900 shadow-2xl">
+            <div class="grid grid-cols-4 gap-2 mb-8">
+                <div class="text-center">
+                    <label class="text-[12px] text-amber-500 font-bold block">年</label>
+                    <input type="number" id="year" class="input-zen-custom">
                 </div>
-                <div>
-                    <label class="text-[12px] text-amber-500 block mb-4 text-center font-bold tracking-tighter">农历月</label>
-                    <select id="month" class="input-zen"></select>
+                <div class="text-center">
+                    <label class="text-[12px] text-amber-500 font-bold block">月</label>
+                    <select id="month" class="input-zen-custom"></select>
                 </div>
-                <div>
-                    <label class="text-[12px] text-amber-500 block mb-4 text-center font-bold tracking-tighter">农历日</label>
-                    <select id="day" class="input-zen"></select>
+                <div class="text-center">
+                    <label class="text-[12px] text-amber-500 font-bold block">日</label>
+                    <select id="day" class="input-zen-custom"></select>
                 </div>
-                <div>
-                    <label class="text-[12px] text-amber-500 block mb-4 text-center font-bold tracking-tighter">时辰</label>
-                    <select id="hour" class="input-zen"></select>
+                <div class="text-center">
+                    <label class="text-[12px] text-amber-500 font-bold block">时</label>
+                    <select id="hour" class="input-zen-custom"></select>
                 </div>
             </div>
 
-            <button onclick="startDivination()" class="btn-divine w-full py-6 text-amber-500 rounded-3xl text-base font-black tracking-[1.5em] uppercase">
-                测算天机
+            <button onclick="startDivination()" class="btn-divine w-full py-5 text-amber-500 rounded-2xl text-base font-black tracking-[1em] uppercase">
+                开启乾坤
             </button>
         </section>
 
-        <div id="resultArea" class="hidden animate-in fade-in zoom-in-95 duration-700">
-            <div class="result-container rounded-[3rem] p-10 text-center">
-                <div id="finalBadge" class="text-[12px] tracking-[0.4em] text-amber-600 font-bold uppercase mb-4"></div>
+        <div id="resultArea" class="hidden">
+            <div class="result-container rounded-[2.5rem] p-8 text-center">
+                <div id="finalBadge" class="text-[10px] tracking-[0.3em] text-amber-600 font-bold uppercase mb-2"></div>
+                <div id="finalResultName" class="text-6xl font-black mb-6 text-zinc-100">--</div>
                 
-                <div id="finalResultName" class="text-7xl font-black mb-8 text-zinc-100">--</div>
-                
-                <div class="divider mb-8"></div>
-                
-                <div id="processSteps" class="flex justify-around mb-10 text-[12px] text-zinc-500">
-                    </div>
+                <div class="flex justify-around mb-6 text-[12px] text-zinc-500 border-t border-b border-zinc-800 py-4">
+                    <div id="processSteps" class="flex w-full justify-around"></div>
+                </div>
 
-                <div class="bg-zinc-900/60 p-6 rounded-2xl border border-zinc-800/50">
+                <div class="bg-zinc-900/60 p-4 rounded-xl">
                     <p id="interpretation" class="text-sm leading-relaxed text-zinc-400 font-light italic text-left"></p>
                 </div>
             </div>
@@ -108,12 +118,12 @@
         const chineseNums = ["", "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十", "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"];
         
         const infoMap = {
-            "大安": { badge: "大吉 · 顺遂", text: "大安事事昌，求谋在东方。失物去不远，宅舍保安康。行人身未动，病者主无妨。" },
-            "留连": { badge: "中平 · 迟缓", text: "留连事难成，求谋日未明。官事只宜缓，去者未回程。失物南方见，急讨方心称。" },
-            "速喜": { badge: "大吉 · 喜庆", text: "速喜喜临门，求财向南行。失物午未间，逢人路上寻。官事有贵人，夫人报喜信。" },
-            "赤口": { badge: "凶 · 纷争", text: "赤口主口舌，官非切宜防。失物急去寻，行人有惊慌。鸡犬多作怪，更须防咀咒。" },
-            "小吉": { badge: "吉 · 顺利", text: "小吉最吉昌，路上好商量。阴人来报喜，失物在坤方。行人立便至，交关真是强。" },
-            "空亡": { badge: "谨慎 · 虚无", text: "空亡事不祥，阴人多乖张。求财无利益，行人有灾殃。失物寻不见，病人逢暗鬼。" }
+            "大安": { badge: "大吉 · 顺遂", text: "大安事事昌，求谋在东方。失物去不远，宅舍保安康。" },
+            "留连": { badge: "中平 · 迟缓", text: "留连事难成，求谋日未明。官事只宜缓，去者未回程。" },
+            "速喜": { badge: "大吉 · 喜庆", text: "速喜喜临门，求财向南行。失物午未间，逢人路上寻。" },
+            "赤口": { badge: "凶 · 纷争", text: "赤口主口舌，官非切宜防。失物急去寻，行人有惊慌。" },
+            "小吉": { badge: "吉 · 顺利", text: "小吉最吉昌，路上好商量。阴人来报喜，失物在坤方。" },
+            "空亡": { badge: "谨慎 · 虚无", text: "空亡事不祥，阴人多乖张。求财无利益，行人有灾殃。" }
         };
 
         function init() {
@@ -147,23 +157,21 @@
             let hIdx = (dIdx + h - 1) % 6;
             let hResult = gods[hIdx];
 
-            const resArea = document.getElementById('resultArea');
-            resArea.classList.remove('hidden');
-            
+            document.getElementById('resultArea').style.display = 'block';
             document.getElementById('finalResultName').innerText = hResult;
             document.getElementById('finalBadge').innerText = infoMap[hResult].badge;
             document.getElementById('interpretation').innerText = infoMap[hResult].text;
 
             const steps = [
-                { label: '月起', to: gods[mIdx] },
-                { label: '日起', to: gods[dIdx] },
-                { label: '时起', to: hResult }
+                { label: '月', to: gods[mIdx] },
+                { label: '日', to: gods[dIdx] },
+                { label: '时', to: hResult }
             ];
 
             document.getElementById('processSteps').innerHTML = steps.map(s => `
                 <div class="flex flex-col items-center">
-                    <span class="mb-1 opacity-40 uppercase tracking-tighter font-bold">${s.label}</span>
-                    <span class="text-amber-200 font-bold text-sm">${s.to}</span>
+                    <span class="opacity-40 uppercase font-bold">${s.label}</span>
+                    <span class="text-amber-200 font-bold">${s.to}</span>
                 </div>
             `).join('<div class="text-zinc-800 self-center">|</div>');
         }
