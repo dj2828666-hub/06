@@ -26,20 +26,26 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* 强制覆盖：放大框体、变黑字、变背景 */
+        /* 修复居中问题并保持美观 */
         .input-zen-custom {
             display: block;
             width: 100%;
-            height: 65px !important; /* 强制高度 */
-            background-color: #fde68a !important; /* 明亮的亮金色背景 */
+            height: 65px !important;
+            background-color: #fde68a !important;
             border: 2px solid #b45309 !important;
-            border-radius: 16px !important;
-            color: #000000 !important; /* 强制黑字 */
-            font-size: 1.25rem !important; /* 字体加大 */
+            border-radius: 20px !important; /* 增加圆角，更圆润 */
+            color: #000000 !important;
+            font-size: 1.2rem !important;
             font-weight: 900 !important;
+            
+            /* 居中核心方案 */
             text-align: center !important;
+            text-align-last: center !important; /* 针对 select 标签的强制居中 */
+            padding: 0 !important;
+            
             outline: none;
-            appearance: none;
+            appearance: none; /* 去掉原生下拉箭头 */
+            -webkit-appearance: none;
             margin-top: 8px;
         }
 
@@ -75,7 +81,7 @@
             <div class="grid grid-cols-4 gap-2 mb-8">
                 <div class="text-center">
                     <label class="text-[12px] text-amber-500 font-bold block">年</label>
-                    <input type="number" id="year" class="input-zen-custom">
+                    <input type="number" id="year" class="input-zen-custom" value="2025">
                 </div>
                 <div class="text-center">
                     <label class="text-[12px] text-amber-500 font-bold block">月</label>
@@ -139,7 +145,8 @@
             for(let i=1; i<=30; i++) dSelect.options.add(new Option(chineseNums[i], i));
             shichen.forEach((s, i) => hSelect.options.add(new Option(s, i + 1)));
 
-            document.getElementById('year').value = date.getFullYear();
+            // 设置默认年份为 2025
+            document.getElementById('year').value = 2025;
             mSelect.value = lunar.getMonth();
             dSelect.value = lunar.getDay();
             const hour = date.getHours();
